@@ -1,0 +1,48 @@
+.selected{
+	background: lightblue;
+}
+.solved{
+	visibility: hidden !important;
+}
+.card{
+	color: transparent;
+	display: inline-block;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	background: none;
+	border: 1px solid black;
+	width: 150px;
+	height: 200px;
+	font: normal normal normal 20px "Raleway";
+	transform-style: preserve-3d;
+	position: relative;
+	transition: transform 0.5s, visibility 2s;
+	visibility: visible;
+}
+.front, .back {
+	color: black;
+	background: #f5f5f5;
+	display: block;
+	backface-visibility: hidden;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	
+}
+.back{
+	transform: rotateY(180deg);
+	font-size: 100px;
+}
+.front{
+	z-index: 2;
+	transform: rotateY(0deg);
+}
+.card.selected{
+	transform: rotateY(180deg);
+}
+
+.game-container{
+	perspective: 1000px;
+}
