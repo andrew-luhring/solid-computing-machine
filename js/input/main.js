@@ -38,7 +38,26 @@ class Card{
 	setSolved(){
 		this.solved = true;
 		this.element.classList.add('solved');
+		
 	}
+}
+
+var counter = 0;
+function shuffleCards(stackOfCards, shuffledStack){
+	shuffledStack = shuffledStack || [];
+	
+	let min = 0
+		, max = stackOfCards.length
+		, randomIndex = Math.floor(Math.random() * (max - min));
+	
+	shuffledStack.push(stackOfCards[randomIndex]);
+	stackOfCards.splice(randomIndex, 1);
+	counter++;
+	
+	if(stackOfCards.length !== 0){
+		shuffleCards(stackOfCards, shuffledStack);
+	}
+	return shuffledStack;
 }
 
 class Model{
@@ -54,7 +73,8 @@ class Model{
 	
 	generateGame(){
 		let fragment = document.createDocumentFragment()
-		, cardInsertionPoint = document.getElementById('game');
+		, cardInsertionPoint = document.getElementById('game')
+		, stackOfCards;
 		
 		for(let i = 1; i <= cardCount; i+=2){
 			let cardAName = `card` + i;
@@ -64,12 +84,12 @@ class Model{
 			this.cards[cardBName] = new Card(cardBName, cardNumber, cardAName);
 		}
 		
+		stackOfCards = shuffleCards(Object.values(this.cards));
 		
-		for(let card in this.cards){
-			if(this.cards.hasOwnProperty(card)){
-				fragment.appendChild(this.cards[card].fragment);
-			}
-		}
+		stackOfCards.forEach((item)=>{
+			fragment.appendChild(item.fragment);
+		});
+		
 		cardInsertionPoint.appendChild(fragment);
 		this.isResetting = false;
 	};
@@ -107,7 +127,7 @@ class Model{
 					}
 				}
 				this.isResetting = false;
-			}, 2000);
+			}, 1000);
 		
 	}
 	
@@ -203,4 +223,5 @@ var waysToSayGoodJob = [
 	, "FABULOUSSSSS"
 	, "YOU'RE ON FIRE. SOMEONE CALL 911."
 	, "I, for one, am proud of you."
+	, "Ok, you're TOO good at this."
 ];

@@ -20,8 +20,11 @@ body{
 	font: normal normal normal 20px "Raleway";
 	transform-style: preserve-3d;
 	position: relative;
-	transition: transform 0.5s, visibility 2s;
+	transition: transform 0.5s, visibility 1s;
 	visibility: visible;
+	margin: 5px;
+	box-sizing: border-box;
+	
 }
 .front, .back {
 	color: black;
@@ -49,6 +52,9 @@ body{
 
 .game-container{
 	perspective: 1000px;
+	
+	width: 981px;
+	margin: auto;
 }
 
 .notification-area{
@@ -60,4 +66,28 @@ body{
 	align-items: center;
 	justify-content: center;
 	font: normal normal normal 18px "Open Sans";
+}
+
+.front-word{
+	display: block;
+	position: absolute;
+	width: calc(100% - 20px);
+	height: calc(100% - 20px);
+	margin-top: 10px;
+	text-align: left;
+	margin-left: 10px;
+}
+.front-word.flipped{
+	transform: rotate(180deg);
+}
+.win-message{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	font-family: Raleway;
+	font-size: 380px;
+	text-align: center;
+	font-weight: 900;
 }
