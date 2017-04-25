@@ -1,5 +1,8 @@
 import {Model} from './model';
 import {notificationRegistrarInstance} from './notification.js';
+
+ 
+
 /**
  * after dom loads, load create the game.
  */
@@ -14,7 +17,7 @@ function loaded(){
 		let card = cards[i];
 		let cardObj = model.cards[card.id];
 		
-		cardObj.setElement(card);
+		cardObj.setElement(card); // see card constructor and model for design decision choice.
 		
 		card.addEventListener('click', ()=>{
 			if(model.isResetting === false ){
@@ -31,7 +34,6 @@ function loaded(){
 		});
 	}
 	console.log("Hey, no cheating.");
-	
 }
 
 document.addEventListener('DOMContentLoaded', loaded, false);
