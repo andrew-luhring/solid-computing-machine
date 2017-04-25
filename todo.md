@@ -1,0 +1,3 @@
+- [x]  prevent duplicate selection
+- [x]  add fonts
+- [ ]  basic tests
