@@ -1,15 +1,13 @@
 import {Model} from './model';
 import {notificationRegistrarInstance} from './notification.js';
 
- 
-
 /**
  * after dom loads, load create the game.
  */
 function loaded(){
 	var model = new Model();
 	var cards;
-	var cardInsertionPoint = document.getElementById('game')
+	var cardInsertionPoint = document.getElementById('game');
 	model.generateGame(cardInsertionPoint);
 	cards = document.querySelectorAll('.card');
 	

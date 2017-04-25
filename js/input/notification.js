@@ -97,7 +97,7 @@ class NotificationRegistrar{
 				message = generateRandomNotification(waysToSayWait);
 				break;
 			case 'duplicateClick':
-					message = "Ok in a philisophical sense, by clicking the same card twice you're right, it's a match, but this isn't philosophy class."
+					message = "Ok in a philisophical sense, by clicking the same card twice you're right, it's a match, but this isn't philosophy class.";
 				break;
 			default:
 				message = '';

@@ -8,7 +8,7 @@ function generateCardElement(name, value){
 		, cardBtn = cardTmpl.content.querySelectorAll('.card')[0]
 		, cardBack = cardTmpl.content.querySelectorAll('.back')[0];
 	cardBtn.id = name;
-	cardBack.textContent = value
+	cardBack.textContent = value;
 	return document.importNode(cardTmpl.content, true);
 }
 
@@ -36,7 +36,7 @@ class Card{
 	 * @param {HTMLElement} elem - the card's html element.
 	 */
 	setElement(elem){
-		if((elem instanceof HTMLElement) === false){ throw new TypeError('tried to assign non element to Card')}
+		if((elem instanceof HTMLElement) === false){ throw new TypeError('tried to assign non element to Card'); }
 		this.element = elem;
 		this.hasElement = true;
 	}

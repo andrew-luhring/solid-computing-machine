@@ -90,7 +90,7 @@ class Model{
 		
 		this.currentCard = '';
 		this.isResetting = false;
-	};
+	}
 
 	/**
 	 * @desc checks to see if arg is the same card as the currentCard. If so, notify's the Notification Registrar that there was a duplicate click.
