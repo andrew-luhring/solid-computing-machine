@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html >
+<head lang="en">
+  <meta charset="UTF-8" >
+  <title>A Matching Card Game</title>
+  <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+  <style >
+    body{
+      margin: 0;
+      padding: 0;
+    }
+    .solved{
+      visibility: hidden !important;
+    }
+    .card{
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background: none;
+      border: 1px solid black;
+      box-sizing: border-box;
+      color: transparent;
+      display: inline-block;
+      font: normal normal normal 20px "Raleway";
+      height: 200px;
+      margin: 5px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.5s, visibility 1s;
+      visibility: visible;
+      width: 150px;
+
+    }
+    .front, .back {
+      -webkit-backface-visibility: hidden;
+      -moz-backface-visibility: hidden;
+      backface-visibility: hidden;
+      background: #f5f5f5;
+      color: black;
+      display: block;
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+
+    }
+    .back{
+      font-size: 100px;
+      transform: rotateY(180deg);
+    }
+    .front{
+      transform: rotateY(0deg);
+      z-index: 2;
+    }
+    .card.selected{
+      transform: rotateY(180deg);
+    }
+    .game-container{
+      margin: auto;
+      perspective: 1000px;
+      width: 981px;
+    }
+    .notification-area{
+      align-content: center;
+      align-items: center;
+      border: 1px solid black;
+      display: flex;
+      font: normal normal normal 18px "Open Sans";
+      height: 200px;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .front-word{
+      display: block;
+      height: calc(100% - 20px);
+      margin-left: 10px;
+      margin-top: 10px;
+      position: absolute;
+      text-align: left;
+      width: calc(100% - 20px);
+    }
+    .front-word.flipped{
+      transform: rotate(180deg);
+    }
+    .win-message{
+      font-family: 'Raleway', sans-serif;
+      font-size: 380px;
+      font-weight: 900;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      position: absolute;
+      text-align: center;
+      width: 100%;
+    }
+
+  </style >
+</head>
+<body >
+
+<main role="main">
+  <div class="notification-area">
+    <p id="game_notification" class="notification"></p>
+  </div>
+  <div id="game" class="game-container"><p class="win-message">You Win.</p></div>
+</main>
+
+<template id="card_tmpl">
+  <button class="card">
+    <span class="front"><span class="front-word">A Card!</span ><span class="front-word flipped">A Card!</span ></span>
+    <span class="back"></span>
+  </button>
+</template>
+
+<script >
+  /******/ (function(modules) { // webpackBootstrap
+    /******/ 	// The module cache
+    /******/ 	var installedModules = {};
+    /******/
+    /******/ 	// The require function
+    /******/ 	function __webpack_require__(moduleId) {
+      /******/
+      /******/ 		// Check if module is in cache
+      /******/ 		if(installedModules[moduleId])
+      /******/ 			return installedModules[moduleId].exports;
+      /******/
+      /******/ 		// Create a new module (and put it into the cache)
+      /******/ 		var module = installedModules[moduleId] = {
+        /******/ 			i: moduleId,
+        /******/ 			l: false,
+        /******/ 			exports: {}
+        /******/ 		};
+      /******/
+      /******/ 		// Execute the module function
+      /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+      /******/
+      /******/ 		// Flag the module as loaded
+      /******/ 		module.l = true;
+      /******/
+      /******/ 		// Return the exports of the module
+      /******/ 		return module.exports;
+      /******/ 	}
+    /******/
+    /******/
+    /******/ 	// expose the modules object (__webpack_modules__)
+    /******/ 	__webpack_require__.m = modules;
+    /******/
+    /******/ 	// expose the module cache
+    /******/ 	__webpack_require__.c = installedModules;
+    /******/
+    /******/ 	// identity function for calling harmony imports with the correct context
+    /******/ 	__webpack_require__.i = function(value) { return value; };
+    /******/
+    /******/ 	// define getter function for harmony exports
+    /******/ 	__webpack_require__.d = function(exports, name, getter) {
+      /******/ 		if(!__webpack_require__.o(exports, name)) {
+        /******/ 			Object.defineProperty(exports, name, {
+          /******/ 				configurable: false,
+          /******/ 				enumerable: true,
+          /******/ 				get: getter
+          /******/ 			});
+        /******/ 		}
+      /******/ 	};
+    /******/
+    /******/ 	// getDefaultExport function for compatibility with non-harmony modules
+    /******/ 	__webpack_require__.n = function(module) {
+      /******/ 		var getter = module && module.__esModule ?
+        /******/ 			function getDefault() { return module['default']; } :
+        /******/ 			function getModuleExports() { return module; };
+      /******/ 		__webpack_require__.d(getter, 'a', getter);
+      /******/ 		return getter;
+      /******/ 	};
+    /******/
+    /******/ 	// Object.prototype.hasOwnProperty.call
+    /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+    /******/
+    /******/ 	// __webpack_public_path__
+    /******/ 	__webpack_require__.p = "/js/output/";
+    /******/
+    /******/ 	// Load entry module and return exports
+    /******/ 	return __webpack_require__(__webpack_require__.s = 3);
+    /******/ })
+    /************************************************************************/
+    /******/ ([
+                /* 0 */
+                /***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+      "use strict";
+      /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return notificationRegistrarInstance; });
+      /* unused harmony export Notification */
+      /* unused harmony export NotificationRegistrar */
+      const placeToPrintTo = 'game_notification';
+
+      var waysToSayWait = [
+        "Jeez. Wait until the cards reset before continuing, psycho."
+        , "Slow Down Speed Racer!"
+        , "Take a breather for a second."
+        , "You're really going for gold aren't you?"
+        , "Figuratively take a chill pill."
+        , "Literally take a chill pill."
+        , "Does someone telling you to relax EVER help you relax? Either way, relax."
+        , "Your new name is Clicky McTooFast."
+        , "Crazy Idea: Wait a second."
+        , "Are you hot or something because you need to chill."
+        , "BRAH. COOL OUT A SECOND."
+        , "Fine. Keep clicking too fast. Whatever."
+        , "Seriously, I'm holding your event listener hostage."
+      ];
+      var waysToSayTryAgain = [
+        "No dice. Try Again."
+        , "Statistically speaking, you're more likely to get it this next time. Try again."
+        , "Hey, at least you don't have a Masters Degree in failure. Yet. Try again."
+        , "In a parallel universe those two are matches. Not this one though. Try again."
+        , "Well then get your stuff together, get it all together and put it in a back pack, all your stuff, so it's together. And if you gotta take it some where, take it somewhere, you know? Take it to the stuff store and sell it, or put it in the stuff museum. I don't care what you do, you just gotta get it together. Get your stuff together. Now Try again."
+        , "Losersayswhat."
+        , "Maybe try interpretive dance instead? Or just try again."
+        , "You know what would solve this problem? A nice, cool, glass of Pepsi. Jk that'd solve nothing. Try Again."
+      ];
+      var waysToSayGoodJob = [
+        "What do you want? A cookie? Nice match."
+        , "If I had a cookie, I'd eat it in front of you. Good job matching cards tho."
+        , "Ok how'd you do that? Are you a witch? Good job."
+        , "Someone call Einstein because you're relatively good at this."
+        , "You could probably solve world hunger if you tried."
+        , "You're great."
+        , "FABULOUSSSSS"
+        , "YOU'RE ON FIRE. SOMEONE CALL 911."
+        , "I, for one, am proud of you."
+        , "Ok, you're TOO good at this."
+      ];
+
+      /**
+       * @desc given an array of stuff, return a random item from the array.
+       * @param collection
+       * @returns {*}
+       */
+      function generateRandomNotification(collection){
+        let min = 0
+          , max = collection.length
+          , randomIndex = Math.floor(Math.random() * (max - min));
+        return collection[randomIndex];
+      }
+
+      /**
+       * @param {HTMLElement} element - element to change text of.
+       * @param {string} val - text to change to.
+       * @returns {string}
+       */
+      function changeNotification(element, val){
+        element.textContent = val;
+        return element.textContent;
+      }
+
+      class Notification{
+        constructor(place, message){
+          var element = document.getElementById(place);
+          this.place = place;
+          this.message = message;
+          this.element = element;
+          changeNotification(this.element, this.message);
+        }
+      }
+
+// This is a bit overkill for this project, but I made it so that you can see how I would architect the app because
+// in the future someone might want to have different notifications in different places, in which case you'd probably
+// only have one place to keep track of.
+      class NotificationRegistrar{
+        constructor(){
+          var currentNotifications = {};
+          currentNotifications[placeToPrintTo] = new Notification(placeToPrintTo, '');
+          this.currentNotifications = currentNotifications;
+        }
+
+        /**
+         * @desc create new notification based on type of notification.
+         * @param {string} typeOfNotification - Type can be "solution", "failure", "wait", "duplicateClick". Others will create empty notification.
+         */
+        notify(typeOfNotification){
+          var message;
+          switch(typeOfNotification){
+            case 'solution':
+              message = generateRandomNotification(waysToSayGoodJob);
+              break;
+            case 'failure':
+              message = generateRandomNotification(waysToSayTryAgain);
+              break;
+            case 'wait':
+              message = generateRandomNotification(waysToSayWait);
+              break;
+            case 'duplicateClick':
+              message = "Ok in a philisophical sense, by clicking the same card twice you're right, it's a match, but this isn't philosophy class."
+              break;
+            default:
+              message = '';
+              break;
+          }
+
+          this.currentNotifications[placeToPrintTo] = new Notification(placeToPrintTo, message);
+        }
+      }
+
+      var notificationRegistrarInstance = new NotificationRegistrar();
+
+
+      /***/ }),
+                /* 1 */
+                /***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+      "use strict";
+      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__card__ = __webpack_require__(2);
+      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__notification__ = __webpack_require__(0);
+      /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Model; });
+      /* unused harmony export shuffleCards */
+
+
+
+      const cardCount = 24;
+
+      /**
+       * @desc Given an Array of items, will return a shuffled array of those items
+       * @param stackOfCards - Array of non-shuffled cards.
+       * @param [shuffledStack] - Array of shuffled cards. This is a recursive function so you dont need to pass this param.
+       * @returns {Array}
+       */
+      function shuffleCards(stackOfCards, shuffledStack){
+        shuffledStack = shuffledStack || [];
+
+        let min = 0
+          , max = stackOfCards.length
+          , randomIndex = Math.floor(Math.random() * (max - min));
+
+        shuffledStack.push(stackOfCards[randomIndex]);
+        stackOfCards.splice(randomIndex, 1);
+        if(stackOfCards.length !== 0){
+          shuffleCards(stackOfCards, shuffledStack);
+        }
+        return shuffledStack;
+      }
+
+      /**
+       * @desc Tests if number is even. Uses bitwise rather than modulo because it's faster.
+       * @param {Number} num
+       * @returns {boolean}
+       */
+      function isEven(num){
+        return !(num & 1);
+      }
+
+      /**
+       * Generates Card pairs.
+       * Do not call directly, use call or apply.
+       */
+      function generateCardInstances(){
+        if(!isEven(cardCount)){ throw new Error("card count is not even. Can't create game"); }
+        for(let i = 1; i <= cardCount; i+=2){
+          let cardAName = `card` + i;
+          let cardBName = `card` + (i+1);
+          let cardNumber = (i+1) / 2;
+          this.cards[cardAName] = new __WEBPACK_IMPORTED_MODULE_0__card__["a" /* Card */](cardAName, cardNumber, cardBName);
+          this.cards[cardBName] = new __WEBPACK_IMPORTED_MODULE_0__card__["a" /* Card */](cardBName, cardNumber, cardAName);
+        }
+      }
+
+      /**
+       * Creates a single document fragment containing all card's template fragments. See Card class for design choice
+       * explanation.
+       * @param shuffledCardsArr
+       * @returns {DocumentFragment}
+       */
+      function generateCardDOM(shuffledCardsArr){
+        let fragment = document.createDocumentFragment();
+        shuffledCardsArr.forEach((card)=>{
+          if(card instanceof __WEBPACK_IMPORTED_MODULE_0__card__["a" /* Card */] === false){ throw new TypeError('theres a card in the shuffled cards array that is not a Card instance.'); }
+          fragment.appendChild(card.fragment);
+        });
+        return fragment;
+      }
+
+      /**
+       * @desc I think technically this is a combination of a Model and a VM. I'm trying not to go overboard on the OOP but
+       *   if you really want to get technical about it the generateGame stuff should be in it's own class.
+       */
+      class Model{
+        constructor(){
+          this.cards = {};
+          this.selectedCardCount = 0;
+          this.isResetting = true;
+        }
+
+        /**
+         * @desc creates card pairs, shuffles cards, creates a single dom fragment of all cards and adds it all at once.
+         * @param {HTMLElement} cardInsertionPoint
+         */
+        generateGame(cardInsertionPoint){
+
+          generateCardInstances.call(this);
+
+          let stackOfCards = shuffleCards(Object.values(this.cards));
+
+          let fragment = generateCardDOM(stackOfCards);
+
+          cardInsertionPoint.appendChild(fragment);
+
+          this.currentCard = '';
+          this.isResetting = false;
+        };
+
+        /**
+         * @desc checks to see if arg is the same card as the currentCard. If so, notify's the Notification Registrar that there was a duplicate click.
+         * @param {String} currentCard
+         * @returns {boolean}
+         */
+        doubleClickCheck(currentCard){
+          if(this.currentCard === currentCard){
+            __WEBPACK_IMPORTED_MODULE_1__notification__["a" /* notificationRegistrarInstance */].notify('duplicateClick');
+            return true;
+          }
+        }
+
+        /**
+         * @desc checks model to see if arg's card pair is selected. if so, sets both cards to solved and notifys
+         * Notification Registrar of solution. If not, and more than 1 cards are selected, resets the cards and notifys a failure.
+         * @param cardName
+         */
+        compareCards(cardName){
+          var currentCard = this.cards[cardName]
+            , cardPair = this.cards[currentCard.pair]
+            , solved = false;
+
+          this.currentCard = cardName;
+          this.selectedCardCount++;
+
+          if(cardPair.selected === true){
+            currentCard.setSolved();
+            cardPair.setSolved();
+            solved = true;
+            __WEBPACK_IMPORTED_MODULE_1__notification__["a" /* notificationRegistrarInstance */].notify('solution');
+            this.resetCards();
+          }
+
+          if(this.selectedCardCount > 1){
+            if(solved === false){
+              this.resetCards();
+              __WEBPACK_IMPORTED_MODULE_1__notification__["a" /* notificationRegistrarInstance */].notify('failure');
+            }
+
+            this.selectedCardCount = 0;
+          }
+        }
+
+        /**
+         * @desc calls Card.resetCard and sets currentCard back to '' after 1 second.
+         */
+        resetCards(){
+          this.isResetting = true;
+          setTimeout(() =>{
+            for(var card in this.cards){
+              if(this.cards.hasOwnProperty(card)){
+                this.cards[card].resetCard();
+              }
+            }
+            this.currentCard = '';
+            this.isResetting = false;
+          }, 1000);
+        }
+      }
+
+
+
+
+      /***/ }),
+                /* 2 */
+                /***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+      "use strict";
+      /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Card; });
+      /* unused harmony export generateCardElement */
+      /**
+       * Creates a document fragment of the card using the card template.
+       * @param card instance
+       * @returns {Node}
+       */
+      function generateCardElement(name, value){
+        let cardTmpl = document.getElementById('card_tmpl')
+          , cardBtn = cardTmpl.content.querySelectorAll('.card')[0]
+          , cardBack = cardTmpl.content.querySelectorAll('.back')[0];
+        cardBtn.id = name;
+        cardBack.textContent = value
+        return document.importNode(cardTmpl.content, true);
+      }
+
+      /**
+       * One weakness of creating cards this way is that you create the card FRAGMENT here on instantiation,
+       * but you have to wait for the Model (it's kinda more of a ViewModel and Model combined) to add the collection of
+       * cards to the DOM before the element can be set. The reason for this decision is because if you were to insert each
+       * card into the Dom individually on instantiation,  you'd be making (total number of cards) changes to the DOM. Which
+       * is slow. The way I'm doing it only creates 1 dom update because it constructs the card game as a single document
+       * fragment and then just inserts that single fragment  into the dom.
+       */
+      class Card{
+        constructor(name, value, pair){
+          this.name = name;
+          this.value = value;
+          this.pair = pair;
+          this.selected = false;
+          this.hasElement = false;
+          this.solved = false;
+          this.fragment = generateCardElement(this.name, this.value);
+        }
+
+        /**
+         * @desc sets the element property to a dom element
+         * @param {HTMLElement} elem - the card's html element.
+         */
+        setElement(elem){
+          if((elem instanceof HTMLElement) === false){ throw new TypeError('tried to assign non element to Card')}
+          this.element = elem;
+          this.hasElement = true;
+        }
+
+        /**
+         * @desc toggles the selected class of the card, and also the selected property of the card.
+         * @throws {ReferenceError} if the card.element hasnt been set yet.
+         */
+        flipCard(){
+          if(this.hasElement !== true) { throw new ReferenceError('How did you flip a card without there being an element in the dom? what are you? a witch?'); }
+          this.selected = !this.selected;
+          this.element.classList.toggle('selected');
+        }
+
+        /**
+         * @desc reset card state to false and remove selected class.
+         */
+        resetCard(){
+          if(this.solved !== true){
+            this.selected = false;
+            this.element.classList.remove('selected');
+          }
+        }
+
+        /**
+         * @desc set solved to true and add solve class
+         */
+        setSolved(){
+          this.solved = true;
+          this.element.classList.add('solved');
+        }
+      }
+
+
+
+      /***/ }),
+                /* 3 */
+                /***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+      "use strict";
+      Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__model__ = __webpack_require__(1);
+      /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__notification_js__ = __webpack_require__(0);
+
+
+
+
+
+      /**
+       * after dom loads, load create the game.
+       */
+      function loaded(){
+        var model = new __WEBPACK_IMPORTED_MODULE_0__model__["a" /* Model */]();
+        var cards;
+        var cardInsertionPoint = document.getElementById('game')
+        model.generateGame(cardInsertionPoint);
+        cards = document.querySelectorAll('.card');
+
+        for(let i = 0; i < cards.length; i++){
+          let card = cards[i];
+          let cardObj = model.cards[card.id];
+
+          cardObj.setElement(card); // see card constructor and model for design decision choice.
+
+          card.addEventListener('click', ()=>{
+            if(model.isResetting === false ){
+
+              if(model.doubleClickCheck(cardObj.name) === true){
+                return false;
+              }
+
+              cardObj.flipCard();
+              model.compareCards(cardObj.name);
+            } else {
+              __WEBPACK_IMPORTED_MODULE_1__notification_js__["a" /* notificationRegistrarInstance */].notify('wait');
+            }
+          });
+        }
+        console.log("Hey, no cheating.");
+      }
+
+      document.addEventListener('DOMContentLoaded', loaded, false);
+
+
+
+      /***/ })
+                /******/ ]);
+</script >
+</body >
+</html >
